@@ -1,0 +1,13 @@
+{
+  "name": "reinvanoyen/dry-giftcard",
+  "description": "Giftcards",
+  "type": "library",
+  "require": {
+    "reinvanoyen/oak": "^1.0.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tnt\\Giftcard\\": "src/"
+    }
+  }
+}

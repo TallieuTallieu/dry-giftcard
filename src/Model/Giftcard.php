@@ -2,6 +2,7 @@
 
 namespace Tnt\Giftcard\Model;
 
+use dry\media\File;
 use dry\orm\Model;
 use Oak\Dispatcher\Facade\Dispatcher;
 use Tnt\Ecommerce\Contracts\BuyableInterface;
@@ -23,6 +24,10 @@ class Giftcard extends Model implements BuyableInterface, CouponInterface
     const STATUS_AWAITING_ORDER_PAYMENT = 0;
     const STATUS_AWAITING_GENERATION = 1;
     const STATUS_READY = 2;
+
+    public static $special_fields = [
+        'file' => File::class,
+    ];
 
     // Relations
 

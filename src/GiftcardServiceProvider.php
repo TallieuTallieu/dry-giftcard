@@ -8,10 +8,12 @@ use Oak\Contracts\Dispatcher\DispatcherInterface;
 use Oak\Migration\MigrationManager;
 use Oak\Migration\Migrator;
 use Oak\ServiceProvider;
+use Tnt\Ecommerce\Events\Order\BuyableAdded;
 use Tnt\Ecommerce\Events\Order\Paid;
 use Tnt\Ecommerce\Model\DiscountCode;
 use Tnt\Giftcard\Console\GenerateGiftcards;
 use Tnt\Giftcard\Model\Giftcard;
+use Tnt\Giftcard\Revisions\OrderAddedToGiftcardTable;
 use Tnt\Giftcard\Revisions\CreateGiftcardTable;
 
 class GiftcardServiceProvider extends ServiceProvider
@@ -40,6 +42,7 @@ class GiftcardServiceProvider extends ServiceProvider
 
         $migrator->setRevisions([
             CreateGiftcardTable::class,
+            OrderAddedToGiftcardTable::class,
         ]);
 
         $app->get(MigrationManager::class)
@@ -56,6 +59,21 @@ class GiftcardServiceProvider extends ServiceProvider
     private function bootEventListeners(ContainerInterface $app)
     {
         $dispatcher = $app->get(DispatcherInterface::class);
+
+        // Listen to BuyableAddedToOrder event
+        $dispatcher->addListener(BuyableAdded::class, function ($buyableAdded) {
+
+            $order = $buyableAdded->getOrder();
+            $buyable = $buyableAdded->getBuyable();
+
+            // Only target gift cards
+            if (! $buyable || ! ($buyable instanceof Giftcard)) {
+                return;
+            }
+
+            $buyable->order = $order;
+            $buyable->save();
+        });
 
         // Listen to Paid event
         $dispatcher->addListener(Paid::class, function ($paidEvent) {

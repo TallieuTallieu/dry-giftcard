@@ -26,6 +26,7 @@ class Giftcard extends Model implements BuyableInterface, CouponInterface
     const STATUS_READY = 2;
 
     public static $special_fields = [
+        'order' => Order::class,
         'file' => File::class,
     ];
 
@@ -39,12 +40,26 @@ class Giftcard extends Model implements BuyableInterface, CouponInterface
         ]);
     }
 
-    public function get_order_item(): OrderItem
+    public function getOrder()
     {
-        return OrderItem::load_by([
+        if ($this->order) {
+
+            $orderItem = OrderItem::load_by([
+                'order' => $this->order,
+                'item_id' => $this->id,
+                'item_class' => get_class($this),
+            ]);
+
+            return $orderItem->order;
+        }
+
+        $orderItem = OrderItem::one([
             'item_id' => $this->id,
             'item_class' => get_class($this),
         ]);
+
+        return $orderItem->order;
+
     }
 
     // BuyableInterface

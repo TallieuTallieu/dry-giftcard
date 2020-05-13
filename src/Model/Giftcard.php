@@ -2,6 +2,7 @@
 
 namespace Tnt\Giftcard\Model;
 
+use dry\db\FetchException;
 use dry\media\File;
 use dry\orm\Model;
 use Oak\Dispatcher\Facade\Dispatcher;

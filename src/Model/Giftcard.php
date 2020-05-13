@@ -32,12 +32,17 @@ class Giftcard extends Model implements BuyableInterface, CouponInterface
 
     // Relations
 
-    public function get_discount(): DiscountCode
+    public function get_discount():? DiscountCode
     {
-        return DiscountCode::load_by([
-            'coupon_id' => $this->id,
-            'coupon_class' => get_class($this),
-        ]);
+        try {
+            return DiscountCode::load_by([
+                'coupon_id' => $this->id,
+                'coupon_class' => get_class($this),
+            ]);
+
+        } catch (FetchException $e) {
+            return null;
+        }
     }
 
     public function getOrder()

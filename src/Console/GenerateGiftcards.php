@@ -29,15 +29,23 @@ class GenerateGiftcards extends Command
     private $dispatcher;
 
     /**
+     * @var string
+     */
+    private $model;
+
+
+    /**
      * GenerateGiftcards constructor.
      * @param ContainerInterface $app
      * @param RepositoryInterface $config
      * @param DispatcherInterface $dispatcher
+     * @param string $model
      */
-    public function __construct(ContainerInterface $app, RepositoryInterface $config, DispatcherInterface $dispatcher)
+    public function __construct(ContainerInterface $app, RepositoryInterface $config, DispatcherInterface $dispatcher, string $model)
     {
         $this->config = $config;
         $this->dispatcher = $dispatcher;
+        $this->model = $model;
 
         parent::__construct($app);
     }
@@ -56,7 +64,7 @@ class GenerateGiftcards extends Command
         $directory = dirname($templateFilename).'/';
         $filename = basename($templateFilename);
 
-        $giftcards = Giftcard::all('WHERE status = ?', Giftcard::STATUS_AWAITING_GENERATION);
+        $giftcards = ($this->model)::all('WHERE status = ?', Giftcard::STATUS_AWAITING_GENERATION);
 
         $generatedAmount = 0;
 

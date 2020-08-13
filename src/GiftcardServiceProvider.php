@@ -2,6 +2,7 @@
 
 namespace Tnt\Giftcard;
 
+use Oak\Contracts\Config\RepositoryInterface;
 use Oak\Contracts\Console\KernelInterface;
 use Oak\Contracts\Container\ContainerInterface;
 use Oak\Contracts\Dispatcher\DispatcherInterface;
@@ -31,7 +32,11 @@ class GiftcardServiceProvider extends ServiceProvider
 
     public function register(ContainerInterface $app)
     {
-        //
+        $config = $app->get(RepositoryInterface::class);
+
+        $model = $config->get('giftcard.model', Giftcard::class);
+
+        $app->whenAsksGive(GenerateGiftcards::class, 'model', $model);
     }
 
     private function bootMigrator(ContainerInterface $app)

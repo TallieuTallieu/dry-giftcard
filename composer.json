@@ -1,9 +1,9 @@
 {
-  "name": "reinvanoyen/dry-giftcard",
+  "name": "tallieutallieu/dry-giftcard",
   "description": "Giftcards",
   "type": "library",
   "require": {
-    "reinvanoyen/oak": "^1.0.8"
+    "tallieutallieu/oak": "^1.0.8"
   },
   "autoload": {
     "psr-4": {
